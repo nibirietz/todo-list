@@ -2,8 +2,9 @@ import flet
 from db import *
 
 
-class MainWindow:
+class MainWindow(flet.UserControl):
     def __init__(self):
+        super().__init__()
         self.page = None
         self.repository = Repository(db)
         flet.app(target=self.main_loop)
@@ -20,11 +21,15 @@ class MainWindow:
     def load_date(self):
         tasks = self.repository.load_tasks()
         for task in tasks:
-            self.page.add(task.get_view())
+            print()
+            self.page.add(TaskView(task).get_view())
 
     def create_task(self, field):
         task_name = field.control.value
-        task = Task(field.control.value)
+        task = Task(task_name)
+        task_view = TaskView(task)
+        self.repository.add_task(task)
+        self.page.add(task_view.get_view())
 
 
 class Task:
@@ -33,9 +38,27 @@ class Task:
         self.status = status
         self.start_date = start_date
 
+    def delete_task(self):
+        repo = Repository(db)
+        repo.delete_task(self)
+
+
+class TaskView(flet.UserControl):
+    def __init__(self, task: Task):
+        super().__init__()
+        self.task = task
+        name = flet.Text(value=task.name)
+        status = flet.Text(value=str(task.status))
+        start_date = flet.Text(value=task.start_date)
+        delete_button = flet.ElevatedButton(text="D", on_click=self.delete_task)
+        self.row = flet.Row([name, status, start_date, delete_button])
+
     def get_view(self):
-        name_view = flet.Text(value=self.name)
-        return flet.Row([name_view])
+        return self.row
+
+    def delete_task(self, task):
+        self.task.delete_task()
+        self.row.page.remove(self.row)
 
 
 class Repository:
@@ -60,10 +83,15 @@ class Repository:
 
         return tasks
 
+    def delete_task(self, task):
+        self.database.delete_task(task)
+
 
 def main():
     main_window = MainWindow()
 
+
+# main_window = MainWindow()
 
 if __name__ == '__main__':
     main()
