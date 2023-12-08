@@ -1,6 +1,6 @@
 import datetime
 
-from sqlalchemy import Column, Integer, String, DateTime, create_engine, select
+from sqlalchemy import Column, Integer, String, Date, create_engine, Boolean
 from sqlalchemy.orm import declarative_base, Session
 
 Base = declarative_base()
@@ -11,15 +11,21 @@ class Task(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String)
-    status = Column(Integer)
-    created_on = Column(DateTime)
-    start_date = Column(DateTime)
+    status = Column(Boolean)
+    created_on = Column(Date)
+    start_date = Column(Date)
 
-    def __init__(self, name, status=-1, start_date=None):
+    def __init__(self, name, status=False, start_date=None):
         self.name = name
         self.status = status
-        self.created_on = datetime.datetime.now()
+        self.created_on = datetime.datetime.now().date()
         self.start_date = start_date
+
+    def update(self, name=name, status=status, start_date=start_date):
+        self.name = name
+        self.status = status
+        self.start_date = start_date
+        database.update_task()
 
 
 class Database:
@@ -37,6 +43,9 @@ class Database:
 
     def delete_task(self, task: Task):
         self.session.delete(task)
+        self.session.commit()
+
+    def update_task(self):
         self.session.commit()
 
 
