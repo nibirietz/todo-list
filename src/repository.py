@@ -18,6 +18,15 @@ class Repository:
         create_date = task.create_date
         self.database.add_task(name=name, status=status, create_date=create_date)
 
+    def update_task(self, task: Task):
+        name = task.name
+        status = task.status
+        create_date = task.create_date
+        self.database.update_task(create_date=create_date, name=name, status=status)
+
     def delete_task(self, task: Task):
         create_date = task.create_date
         self.database.delete_task(create_date)
+
+
+repository = Repository()

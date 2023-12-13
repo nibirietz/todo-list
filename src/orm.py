@@ -16,7 +16,7 @@ class TaskTable(Base):
 
 class Database:
     def __init__(self):
-        engine = create_engine("sqlite:///tasks.db")
+        engine = create_engine("sqlite:///tasks.db", echo=True)
         Base.metadata.create_all(engine)
         self.Session = sessionmaker(bind=engine)
 
@@ -27,6 +27,11 @@ class Database:
     def add_task(self, **data):
         with self.Session() as session:
             session.execute(insert(TaskTable).values(**data))
+            session.commit()
+
+    def update_task(self, create_date, **data):
+        with self.Session() as session:
+            session.execute(update(TaskTable).values(**data).where(TaskTable.create_date == create_date))
             session.commit()
 
     def delete_task(self, create_date: datetime):
