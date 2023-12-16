@@ -1,4 +1,4 @@
-from sqlalchemy import Column, create_engine, select, insert, delete, update, Integer, String, DateTime
+from sqlalchemy import Column, create_engine, select, insert, delete, update, Integer, String, DateTime, Boolean
 from sqlalchemy.orm import sessionmaker, declarative_base
 import datetime
 
@@ -10,8 +10,9 @@ class TaskTable(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String)
-    status = Column(Integer)
+    status = Column(Boolean)
     create_date = Column(DateTime)
+    start_date = Column(DateTime)
 
 
 class Database:

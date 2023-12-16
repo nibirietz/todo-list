@@ -8,7 +8,10 @@ class Repository:
 
     def load_tasks(self):
         tasks_table = self.database.load_tasks()
-        return [Task(task.TaskTable.name, task.TaskTable.status, task.TaskTable.create_date) for
+        return [Task(name=task.TaskTable.name,
+                     status=task.TaskTable.status,
+                     create_date=task.TaskTable.create_date,
+                     start_date=task.TaskTable.start_date) for
                 task in
                 tasks_table]
 

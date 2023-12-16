@@ -5,7 +5,7 @@ import flet
 
 class MainWindow:
     def __init__(self):
-        self.page = None
+        self.page: flet.Page
         flet.app(target=self.main_loop)
 
     def main_loop(self, page: flet.Page):
@@ -33,10 +33,14 @@ class TaskView:
     def __init__(self, task: Task):
         self.task = task
         name = flet.TextField(label=task.name, on_submit=self.update_name)
-        status = flet.Checkbox(value=task.status)
+        status = flet.Checkbox(value=task.status, on_change=self.update_checkbox)
         create_date = flet.Text(value=str(task.create_date))
-        delete_button = flet.IconButton(icon=flet.icons.DELETE_OUTLINE, on_click=self.delete)
-        self.row = flet.Row([name, create_date, delete_button])
+        start_date = flet.ElevatedButton(text=task.start_date
+        if task.start_date is not None else "Выбрать дату",
+                                         on_click=self.change_date)
+        delete_button = flet.IconButton(icon=flet.icons.DELETE_OUTLINE,
+                                        on_click=self.delete)
+        self.row = flet.Row([status, name, create_date, start_date, delete_button])
 
     def update_name(self, field):
         name = field.control.value
@@ -48,6 +52,14 @@ class TaskView:
     def delete(self, button):
         repository.delete_task(self.task)
         self.row.page.remove(self.row)
+
+    def update_checkbox(self, button):
+        self.task.status = button.control.value
+        repository.update_task(self.task)
+
+    def change_date(self, button):
+        # TODO: сделать функционал добавления даты
+        pass
 
 
 def main():
