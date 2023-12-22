@@ -1,4 +1,3 @@
-from datetime import datetime
 from src.orm import Database, TaskTable
 from src.model import Task
 
@@ -7,17 +6,20 @@ class Repository:
     def __init__(self, database=Database()):
         self.database = database
 
-    def _task_to_dict(self, task: Task) -> dict:
+    @staticmethod
+    def _task_to_dict(task: Task) -> dict:
         return {"name": task.name, "status": task.status, "create_date": task.create_date,
                 "start_date": task.create_date}
 
-    def _to_task(self, task_table: TaskTable):
+    @staticmethod
+    def _to_task(task_table: TaskTable) -> Task:
         return Task(name=task_table.name, status=task_table.status, create_date=task_table.create_date,
                     start_date=task_table.start_date)
 
-    def load_tasks(self):
+    def load_tasks(self) -> list[Task]:
         tasks_table: list[TaskTable] = self.database.load_tasks()
-        return [self._to_task(task[0]) for task in tasks_table]
+        result = [self._to_task(task[0]) for task in tasks_table]
+        return result
 
     def add_task(self, task: Task):
         task_attributes = self._task_to_dict(task)
