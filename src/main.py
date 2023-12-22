@@ -5,11 +5,12 @@ import flet
 
 class MainWindow:
     def __init__(self):
-        self.page: flet.Page
+        self.page: flet.Page | None = None
         flet.app(target=self.main_loop)
 
     def main_loop(self, page: flet.Page):
         self.page = page
+        self.page.title = "TODO List"
         self.create_text_field()
         self.load_tasks()
 
@@ -27,7 +28,7 @@ class MainWindow:
         self.page.add(text_field)
 
     def create_task(self, field):
-        task = Task(field.control.value)
+        task = Task(name=field.control.value)
         repository.add_task(task)
         field.control.value = ""
         task_view = TaskView(task)
@@ -40,8 +41,8 @@ class TaskView:
         self.task = task
         name = flet.TextField(label=task.name, on_submit=self.update_name)
         status = flet.Checkbox(value=task.status, on_change=self.update_checkbox)
-        create_date = flet.Text(value=str(task.create_date.strftime("%Y-%m-%d %H:%M:%S")))
-        self.start_date = flet.ElevatedButton(text=task.start_date
+        create_date = flet.Text(value=task.create_date.strftime("%Y-%m-%d %H:%M:%S"))
+        self.start_date = flet.ElevatedButton(text=task.start_date.strftime("%Y-%m-%d")
         if task.start_date is not None else "Выбрать дату",
                                               on_click=lambda _: self.date_picker.pick_date())
         self.date_picker = flet.DatePicker(on_change=self.change_date)
@@ -67,8 +68,9 @@ class TaskView:
     def change_date(self, button):
         self.task.start_date = self.date_picker.value.date()
         repository.update_task(self.task)
-        self.start_date.text = self.date_picker.value.date()
+        self.start_date.text = self.date_picker.value.date().strftime("%Y-%m-%d")
         self.date_picker.page.update()
+        self.start_date.update()
 
 
 def main():
