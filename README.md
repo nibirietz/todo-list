@@ -8,6 +8,7 @@
 
 `
 git clone https://github.com/nibirietz/todo-list.git
+
 cd todo-list/src
 `
 
@@ -15,6 +16,7 @@ cd todo-list/src
 
 `
 python -m venv .venv
+
 source .venv/bin/activate
 `
 
