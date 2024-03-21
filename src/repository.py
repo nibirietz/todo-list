@@ -3,6 +3,8 @@ from src.model import Task
 
 
 class Repository:
+    """Класс репозиторий. Нужен для более высокоуровневого взаимодействия с базой данных."""
+
     def __init__(self, database=Database()):
         self.database = database
 

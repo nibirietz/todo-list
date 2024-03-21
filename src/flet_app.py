@@ -4,6 +4,8 @@ import flet
 
 
 class MainWindow:
+    """Класс, который реализует главное окно. При создании экземляра, инициализируется Flet."""
+
     def __init__(self):
         self.page: flet.Page | None = None
         flet.app(target=self.main_loop)
@@ -24,7 +26,7 @@ class MainWindow:
         self.page.add(*tasks_view)
 
     def create_text_field(self):
-        text_field = flet.TextField(label="Введите задачу", on_submit=self.create_task)
+        text_field = flet.TextField(label="Введите задачу", on_submit=self.create_task, autofocus=True)
         self.page.add(text_field)
 
     def create_task(self, field):
@@ -45,10 +47,11 @@ class TaskView:
         self.start_date = flet.ElevatedButton(text=task.start_date.strftime("%Y-%m-%d")
         if task.start_date is not None else "Выбрать дату",
                                               on_click=lambda _: self.date_picker.pick_date())
-        self.date_picker = flet.DatePicker(on_change=self.change_date)
+        self.date_picker = flet.DatePicker(on_change=self.change_start_date)
         delete_button = flet.IconButton(icon=flet.icons.DELETE_OUTLINE,
                                         on_click=self.delete)
-        self.row = flet.Row([status, name, create_date, self.start_date, delete_button])
+        test = flet.Container(content=delete_button, alignment=flet.alignment.center)
+        self.row = flet.Row([status, name, create_date, self.start_date, test])
 
     def update_name(self, field):
         name = field.control.value
@@ -65,7 +68,7 @@ class TaskView:
         self.task.status = button.control.value
         repository.update_task(self.task)
 
-    def change_date(self, button):
+    def change_start_date(self, button):
         self.task.start_date = self.date_picker.value.date()
         repository.update_task(self.task)
         self.start_date.text = self.date_picker.value.date().strftime("%Y-%m-%d")

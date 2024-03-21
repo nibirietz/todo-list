@@ -2,7 +2,7 @@ from src.model import Task
 
 
 def create_test_task():
-    return Task("Da!")
+    return Task(name="Da!")
 
 
 def test_read_task():

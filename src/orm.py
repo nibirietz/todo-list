@@ -6,6 +6,9 @@ Base = declarative_base()
 
 
 class TaskTable(Base):
+    """
+    Класс, который хранит данные задачи в БД.
+    """
     __tablename__ = "tasks"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -16,12 +19,16 @@ class TaskTable(Base):
 
 
 class Database:
+    """
+    Класс для работы с базой данных. Реализация более низкого уровня.
+    """
+
     def __init__(self):
         engine = create_engine("sqlite:///tasks.db", echo=True)
         Base.metadata.create_all(engine)
         self.Session = sessionmaker(bind=engine)
 
-    def load_tasks(self):
+    def load_tasks(self) -> list[TaskTable]:
         with self.Session() as session:
             return session.execute(select(TaskTable)).fetchall()
 
