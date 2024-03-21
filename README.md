@@ -6,19 +6,15 @@
 Требуется Python версии не ниже 3.10
 Сначала нужно клонировать репозиторий и перейти в директорию:
 
-`
-git clone https://github.com/nibirietz/todo-list.git
+`git clone https://github.com/nibirietz/todo-list.git`
 
-cd todo-list/src
-`
+`cd todo-list/src`
 
 Создать и активировать виртуальное окружение:
 
-`
-python -m venv .venv
+`python -m venv .venv`
 
-source .venv/bin/activate
-`
+`source .venv/bin/activate`
 
 И импортировать все библиотеки:
 
